@@ -41,13 +41,85 @@ class Controller_Data extends Controller {
       $checkins = array_merge($checkins,$items);
 
       $more = count($items) == $limit;
-$more = false;
+//$more = false;
       $offset += $limit;
     } while($more);
 
+    $this->response->body(View::factory('data/map')
+      ->bind('checkins',$checkins)
+      ->bind('user_id', $id)
+    );
+      
+/*
     $this->response->body(View::factory('data/load')
       ->bind('checkins',$checkins)
     );
+    */
   }
 
-} // End Welcome
+	public function action_categories() {
+		$categories = ORM::factory('category')->find_all();
+		$this->response->body(
+			View::factory('data/categories')
+				->bind('categories',$categories)
+		);
+	}
+
+  public function action_load_categories() {
+	$this->load_config();
+
+	$user = ORM::factory('user',1);
+    $url = $this->foursquare_api_conf['categories_url'].'?'
+ 		.'oauth_token='.$user->token;
+	$data = json_decode(Remote::get($url));
+	if($data->meta->code !== 200) {
+		echo 'error response code: ',$data->meta->code;
+		die;
+	}
+	$categories = $data->response->categories;
+	foreach($categories as $category) {
+		$db_cat = ORM::factory('category')
+			->where('name','=',$category->name)
+			->where('4sq_id','=',null)
+			->find();
+		foreach($category as $attr => $value) {
+			if(!is_array($value)) {
+				if('id' == $attr) {
+					$attr = '4sq_id';
+				}
+				echo 'attr: ',$attr,' value:',$value,'<br/>';
+				$db_cat->$attr = $value;
+			}
+		}
+		$db_cat->save();
+		if(isset($category->categories)) {
+			$this->_load_sub_categories($category->categories,$db_cat->id);
+		}
+	}
+	echo '<pre>';
+	print_r($categories);
+	echo '</pre>';
+	echo View::factory('profiler/stats');
+  }
+
+	private function _load_sub_categories($categories, $parent = null) {
+		foreach($categories as $category) {
+			$db_cat = ORM::factory('category')
+				->where('4sq_id','=',$category->id)
+				->find();
+			foreach($category as $attr => $value) {
+				if(is_array($value)) continue;
+				if($attr == 'id') {
+					$attr = '4sq_id';
+				}
+				$db_cat->$attr = $value;
+			}
+			$db_cat->parent = $parent;
+			$db_cat->save();
+			if(isset($category->categories)) {
+				$this->_load_sub_categories($category->categories,$db_cat->id);
+			}
+		}
+	}
+
+}

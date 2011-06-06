@@ -82,6 +82,7 @@ if (isset($_SERVER['KOHANA_ENV']))
 Kohana::init(array(
 	'base_url'   => '/~ddunlop/4sq/',
 	'index_file' => false,
+'errors' => true,
 ));
 
 /**
