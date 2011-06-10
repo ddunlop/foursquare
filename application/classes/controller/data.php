@@ -24,7 +24,7 @@ class Controller_Data extends Controller {
     $offset = 0;
 
     $date = new DateTime();
-    $year = new DateInterval('P1Y');
+    $year = new DateInterval('P4Y');
     $one_year_ago = $date->sub($year)->format('U')-1;
 
     $limit = 250;

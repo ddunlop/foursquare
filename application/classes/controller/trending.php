@@ -1,17 +1,17 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Map extends Controller {
+class Controller_Trending extends Controller {
   public function action_index($user_id = false) {
     $m = new Mongo();
-    $locations = $m->foursquare->locations;
-    $venues = $locations->findOne(array('_id'=>$user_id));
+    $trending = $m->foursquare->trending;
+    $venues = $trending->find()->sort(array('last'=>-1));
     if(null === $venues) {
       $this->response->body(View::factory('fail'));
       return;
     }
     
     $this->response->body(
-      View::factory('map/map')
+      View::factory('trending/index')
         ->bind('venues', $venues)
     );
   }

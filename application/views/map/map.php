@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>test</title>
+  <title>Map of Checkins</title>
   <style type="text/css">
     html { height: 100% }
     body { height: 100%; margin: 0px; padding: 0px }
@@ -16,7 +16,7 @@
   <script type="text/javascript" charset="utf-8">
     var latlng = new google.maps.LatLng(40.692778, -73.990278);
     var myOptions = {
-      zoom: 13,
+      zoom: 14,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -73,4 +73,6 @@ if(is_array($venue['loc']))
     })();
     }
   </script>
-</body>  
+<?php
+  echo View::factory('shared/footer');
+?>

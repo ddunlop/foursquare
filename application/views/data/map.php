@@ -28,5 +28,7 @@
   $loc = $m->foursquare->locations;
   $venues['_id'] = $user_id;
   $loc->update(array('_id'=>$user_id), $venues, array('upsert'=>true));
+
+  echo '<p>', html::anchor('map/' . $user_id, 'See Map'), '</p>';
 ?>
 </body>
