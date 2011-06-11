@@ -7,7 +7,14 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title></title>
+  <?php
+
+    $ltitle = '4sq';
+    if(isset($title)) {
+      $ltitle = $title;
+    }
+    echo '<title>',$ltitle,'</title>', PHP_EOL;
+  ?>
   <meta name="description" content="">
   <meta name="author" content="">
 
