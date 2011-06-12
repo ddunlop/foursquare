@@ -6,19 +6,16 @@
 <ul>
 <?php
 
+
+echo $start->format('r'), ' to ', $end->format('r');
+echo '<p>count: ', $venues->count(), '</p>';
+
 // This code is hacky, buckets may not have the proper min_per_pixel if there are to many data points, and because buckets may not be even
-$now = new DateTime();//date('c',1307624347));
-$day = new DateInterval('P1D');
-$start = clone $now;
-$start->sub($day);
-
-//echo 'now: ', $now->format('Y-m-d H:i:s'), ' start: ', $start->format('Y-m-d H:i:s'), PHP_EOL;
-
 
 $image_width = 100;
 
 $start_sec = $start->format('U');
-$end_sec = $now->format('U');
+$end_sec = $end->format('U');
 
 $minutes_per_day = floor( ( $end_sec - $start_sec ) / 60);
 
@@ -43,6 +40,7 @@ foreach($venues as $venue) {
   }
   
   if(!$relivent) {
+    echo '<li>', $venue['name'], ' not relivent</li>';
     continue;
   }
 
