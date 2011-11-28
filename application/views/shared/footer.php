@@ -4,7 +4,11 @@
 
  <!-- scripts concatenated and minified via ant build script-->
 <?php
-echo html::script('media/js/plugins.js'),html::script('media/js/script.js')
+echo html::script('media/js/plugins.js'),html::script('media/js/script.js');
+
+if(isset($script)) {
+  echo html::script($script);
+}
 ?>
 
  <!-- end scripts-->
